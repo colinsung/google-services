@@ -1,5 +1,15 @@
+import java.text.SimpleDateFormat
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+
+def versionMajor = 1
+def versionMinor = 1
+def versionPatch = 0
+
+def buildTime() {
+    def df = new SimpleDateFormat("yyMMddhhmm")
+    return df.format(new Date())
+}
 
 android {
     compileSdkVersion 22
@@ -9,8 +19,8 @@ android {
         applicationId "com.google.samples.quickstart.admobexample"
         minSdkVersion 9
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode Integer.parseInt(buildTime())
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}.${buildTime()}"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
