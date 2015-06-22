@@ -16,7 +16,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.google.samples.quickstart.admobexample"
+        applicationId "com.ccc.samples.quickstart.admobexample"
         minSdkVersion 9
         targetSdkVersion 22
         versionCode Integer.parseInt(buildTime())
