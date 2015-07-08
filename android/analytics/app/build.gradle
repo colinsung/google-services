@@ -16,7 +16,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.google.samples.quickstart.analytics"
+        applicationId "com.ccc.samples.quickstart.analytics"
         minSdkVersion 14
         targetSdkVersion 22
         versionCode Integer.parseInt(buildTime())
