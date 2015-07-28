@@ -20,6 +20,8 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
 
+  var kTrackingID = "YOUR_TRACKING_ID"
+  
   // [START didfinishlaunching]
   func application(application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -28,6 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       assert(configureError == nil, "Error configuring Google services: \(configureError)")
       // Initialize sign-in
       GINInvite.applicationDidFinishLaunching()
+      
+      if (kTrackingID != "YOUR_TRACKING_ID") {
+        GINInvite.setGoogleAnalyticsTrackingId(kTrackingID)
+      }
       return true
   }
   // [END didfinishlaunching]
@@ -36,8 +42,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(application: UIApplication,
     openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
       let invite = GINInvite.handleURL(url, sourceApplication:sourceApplication, annotation:annotation)
+
       if (invite != nil) {
-        println("Invite received from: \(sourceApplication) Deeplink: \(invite.deepLink), Id: \(invite.inviteId)")
+        GINInvite.completeInvitation()
+        let matchType =
+            (invite.matchType == GINReceivedInviteMatchType.Weak) ? "Weak" : "Strong"
+        println("Invite received from: \(sourceApplication) Deeplink: \(invite.deepLink)," +
+            "Id: \(invite.inviteId), Type: \(matchType)")
+        GINInvite.convertInvitation(invite.inviteId)
         return true
       }
 

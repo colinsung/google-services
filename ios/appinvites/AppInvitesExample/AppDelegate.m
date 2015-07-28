@@ -17,6 +17,7 @@
 #import "AppDelegate.h"
 #import <Google/AppInvite.h>
 
+static NSString* kTrackingID = @"YOUR_TRACKING_ID";
 
 @implementation AppDelegate
 
@@ -28,30 +29,39 @@
   NSAssert(!configureError, @"Error configuring Google services: %@", configureError);
 
   [GINInvite applicationDidFinishLaunching];
+
+  if ([kTrackingID compare:@"YOUR_TRACKING_ID"] != NSOrderedSame) {
+    [GINInvite setGoogleAnalyticsTrackingId: kTrackingID];
+  }
   return YES;
 }
 // [END didfinishlaunching]
+
 
 // [START openurl]
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-
   // Handle App Invite requests
   GINReceivedInvite *invite = [GINInvite handleURL:url
                                  sourceApplication:sourceApplication
                                         annotation:annotation];
   if (invite) {
+    [GINInvite completeInvitation];
+    NSString *matchType =
+        (invite.matchType == kGINReceivedInviteMatchTypeWeak) ? @"Weak" : @"Strong";
     NSString *message =
-    [NSString stringWithFormat:
-        @"Deep link from %@ \nInvite ID: %@\nApp URL: %@",
-        sourceApplication, invite.inviteId, invite.deepLink];
+        [NSString stringWithFormat:@"Deep link from %@ \nInvite ID: %@\nApp URL: %@\nMatch Type:%@",
+            sourceApplication, invite.inviteId, invite.deepLink, matchType];
+
     [[[UIAlertView alloc] initWithTitle:@"Deep-link Data"
                                 message:message
                                delegate:nil
                       cancelButtonTitle:@"OK"
                       otherButtonTitles:nil] show];
+
+    [GINInvite convertInvitation:invite.inviteId];
     return YES;
   }
 
@@ -60,5 +70,4 @@
                                     annotation:annotation];
 }
 // [END openurl]
-
 @end
